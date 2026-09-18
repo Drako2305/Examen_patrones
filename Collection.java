@@ -1,67 +1,124 @@
 //Builder
+ public static class Builder {
+ private Long consecutivo;
+ private String documentoDonante;
+ private String codigoSede;
+ private LocalDate fechaColecta;
+ private String modalidad;
+ private Double volumenRealMl;
+ private Integer tiempoPuncionMin;
+ private String flebotomista;
+ private String loteInsumos;
+ private String campanaAsociada;
+ private String observaciones;
+ private List<String> eventosAdversos = new ArrayList<>();
+ private Boolean donantePrimeraVez = false;
 
-class collectionrecord {
-    
-actual volume (mL), puncture time (min), phlebotomist, supply lot
-    private String sequentialNumber;
-    private String donorDocument;
-    private string siteCode
-    private String collectionDate;
-    private String collectionMethod;
+       public Builder() {}
 
+     public Builder consecutive(Long consecutive) {
+           this.consecutive = consecutive;
+           return this;
+     }
+     public Builder documentDonor(String documentDonor) {
+           this.documentDonor = documentDonor;
+           return this;
 
- 
-    private final String associatedCampaign;
-    private final String Obersevations;
-    private final String listEvents;
-    private final String firsttimedonor;
+     }
 
-    private CustomEntity(IllegalThreadStateException builder) {
-        this.id = builder.id;
-        this.attributeA = builder.IllegalStateException
-      }
+      public Builder locationCode(String locationCode) {
+            this.locationCode = locationCode;
+            return this;
 
+}
 
-    public void display() {
-        System.out.println("IllegalStateException [ID=" if a mandatory item is missing");
-    }
+  public Builder collectionDate(LocalDate collectionDate) {
+          this.collectionDate = collectionDate;
+          return this;
 
-    
-    public static class IllegalStateException {
-        private String id;
-        private String attributeA = "Default"; 
-        private boolean attributeB = false;    
+}
 
-        
-        public EntityBuilder(String id) {
-            this.id = id;
+ public Builder method(String method) {
+         this.method = method;
+         return this;
+
+}
+
+public Builder realVolume(Double realVolume) {
+this.realVolume = realVolume;
+return this;
+
+}
+
+       public Builder minutePunchTime(Integer minutePunchTime) { this.minutePunchTime = minutePunchTime;
+return this;
         }
 
-     
-        public EntityBuilder setAttributeA(String value) {
-            this.attributeA = value;
-            return this; 
+        public BuilderPunTimeMin(IntegerPunTimeMin) {
+            this.MinPunTime = MinPunTime;
+            return this;
         }
 
-        public EntityBuilder setAttributeB(boolean value) {
-            this.attributeB = value;
+        public Builder phlebotomist(String phlebotomist) {
+            this.phlebotomist = phlebotomist;
+            return this;
+        }
+
+        public Builder lotInputs(String lotInputs) {
+            this.lotInputs = lotInputs;
+            return this;
+        }
+
+        public BuilderAssociatedCampaign(StringAssociatedCampaign) {
+            this.associatedCampaign = associatedCampaign;
+            return this;
+        }
+
+        public Builder observations(String observations) {
+            this.observations = observations;
+            return this;
+        }
+
+        public Builder addAdverseEvent(String event) {
+            if (event != null) {
+                this.adverseevents.add(event);
+            }
+            return this;
+        }
+
+        public Builder AdverseEvents(List<String> AdverseEvents) {
+            this.AdverseEvents = AdverseEvents != null ? new ArrayList<>(adverseevents) : new ArrayList<>();
+            return this;
+        }
+
+        public Builder firsttimedonor(Booleanfirsttimedonor) {
+            this.firsttimedonor = firsttimedonor;
             return this;
         }
 
         
-        public CustomEntity build() {
-            return new CustomEntity(this);
-        }
-    }
-}
+        public collectionRecord build() {
+            
+            if (consecutivo == null || documentoDonante == null || documentoDonante.isBlank() ||
+                codigoSede == null || codigoSede.isBlank() || fechaColecta == null ||
+                modalidad == null || modalidad.isBlank() || volumenRealMl == null ||
+                tiempoPuncionMin == null || flebotomista == null || flebotomista.isBlank() ||
+                loteInsumos == null || loteInsumos.isBlank()) {
+                throw new IllegalStateException("Error: Mandatory fields for the collection record are missing.");
+            }
 
-public class Main {
-    public static void main(String[] args) {
-        
-        CustomEntity entity = new CustomEntity.EntityBuilder("001")
-                                .setAttributeA("CustomValue")
-                                .setAttributeB(true)
-                                .build();
-        entity.display();
+            
+            if (tiempoPuncionMin > 15 && (observaciones == null || observaciones.isBlank())) {
+                throw new IllegalStateException("Error: Puncture time exceeds 15 minutes. " +
+                        "An observation is required.");
+            }
+
+            
+            if (!eventosAdversos.isEmpty() && (flebotomista == null || flebotomista.isBlank())) {
+                throw new IllegalStateException("Error: Adverse events cannot be recorded without a responsible phlebotomist.");
+            }
+
+            return new RegistroDeColecta(this);
+        }
     }
 }
