@@ -1,5 +1,3 @@
-//Builder
-
 class collectionrecord {
     // Atributos obligatorios
     //associated campaign, observations, list of adverse events, first-time donor indicator
@@ -117,3 +115,139 @@ public class Main {
         clone.display();    
     }
 }
+
+//Abstract Factory 
+
+from abc import ABC, abstractmethod
+
+
+class Bolsa(ABC):
+    @abstractmethod
+    def getTemperature(self) str:
+    pass
+
+class Etiqueta(ABC):
+    @abstractmethod
+    def getprefix(self) str:
+    pass
+
+class ProtocoloConservacion(ABC):
+    @abstractmethod
+    def getValidity(self) str:
+    pass
+
+
+Mode: Refrigerated
+class RefrigeratedBag(Bag):
+    def get_temperature(self) -> str:
+        return "Temperature: 2°C to 8°C"
+
+class RefrigeratedLabel(Label):
+    def get_prefix(self) -> str:
+        return "Prefix: REF-"
+
+class RefrigeratedProtocol(PreservationProtocol):
+    def get_validity(self) -> str:
+        return "Validity: 7 days"
+
+  Mode: Frozen
+class FrozenBag(Bag):
+    def get_temperature(self) -> str:
+        return "Temperature: -20°C or lower"
+
+class FrozenLabel(Label):
+    def get_prefix(self) -> str:
+        return "Prefix: CONG-"
+
+class FrozenProtocol(PreservationProtocol):
+    def get_validity(self) -> str:
+        return "Validity: 90 days"
+
+class ProtocoloCongelado(ProtocoloConservacion):
+    def obtener_vigencia(self)  str:
+        return "Vigencia: 90 días"
+
+Mode: Ambient
+class BolsaAmbiente(Bolsa):
+    def obtener_temperatura(self) -> str:
+        return "Temperature: 15°C to 25°C"
+
+class EtiquetaAmbiente(Etiqueta):
+    def obtener_prefijo(self) -> str:
+        return "Prefix: AMB-"
+
+class ProtocoloAmbiente(ProtocoloConservacion):
+    def obtener_vigencia(self) -> str:
+        return "Validity: 30 days"
+
+
+
+class FactoryModality (ABC):
+    @abstractmethod
+    def createBag(self) Bag:
+        pass
+
+    @abstractmethod
+    def createLabel(self) Label:
+        pass
+
+    @abstractmethod
+    def createConservationProtocol(self) ConservationProtocol:
+
+
+
+class RefrigeratedFactory(ModalityFactory):
+    def createBag(self)  Bag:
+        return RefrigeratedBag()
+        
+    def createLabel(self) -> Label:
+        return RefrigeratedLabel()
+        
+    def createPreservationProtocol(self)  PreservationProtocol:
+        return RefrigeratedProtocol()
+
+class FrozenFactory(ModalityFactory):
+    def createBag(self)  Bag:
+        return FrozenBag()
+        
+    def createLabel(self) Label:
+        return FrozenLabel()
+        
+    def createPreservationProtocol(self)  PreservationProtocol:
+        return FrozenProtocol()
+
+class FabricaAmbiente(FabricaModalidad):
+    def crearBolsa(self)  Bolsa:
+        return BolsaAmbiente()
+        
+    def crearEtiqueta(self)  Etiqueta:
+        return EtiquetaAmbiente()
+        
+    def crearProtocoloConservacion(self)  ProtocoloConservacion:
+        return ProtocoloAmbiente()
+
+
+
+def client_code(factory: FactoryModality):
+    """
+    The client works solely with abstract interfaces.
+    There are no conditionals (if/switch) to evaluate the modality.
+    """
+    bag = factory.create_bag()
+    label = factory.create_label()
+    protocol = factory.create_preservation_protocol()
+    
+    print(bag.get_temperature())
+    print(label.get_prefix())
+    print(protocol.get_validity())
+
+# Program execution
+if __name__ == "__main__":
+    print(" Processing Refrigerated Mode ")
+    codigo_cliente(FabricaRefrigerado())
+    
+    print("\n Processing Frozen Mode ")
+    codigo_cliente(FabricaCongelado())
+    
+    print("\n Processing Ambient Mode")
+    codigo_cliente(FabricaAmbiente())
